@@ -416,6 +416,12 @@ export function LoginScreen() {
 }
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> b41372189563b135910b84cf7eeee74d291faf50
 // Create Contract workflow
 export function CreateContractWorkflow() {
   return (
