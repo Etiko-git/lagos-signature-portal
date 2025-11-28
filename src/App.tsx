@@ -16,6 +16,13 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
+// Extend Window interface to include global functions from script.js
+declare global {
+  interface Window {
+    loginWithMyIDOnSameDevice?: () => void;
+  }
+}
+
 // Simple route type for in-memory navigation
 export type Route =
   | "dashboard"
