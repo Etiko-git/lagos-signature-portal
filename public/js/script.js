@@ -3,7 +3,7 @@ const interval = 2000;
 // CONFIG
 const CONFIG = {
   apiBaseUrl: "https://proj-ei-d-backend.vercel.app/api",
-  callBackUrl: `http://localhost:5174`,
+  callBackUrl: `/App`,
   clientApp: `Nigeria ICRP`,
   transactionType: "Login",
   polling: {
@@ -423,7 +423,7 @@ function renderUserDashboardPage(userDetails) {
   localStorage.setItem('userDetailsTimestamp', Date.now());
 
   // Redirect to user.html
-  window.location.href = '/LandingPage';
+  window.location.href = '/App';
 }
 
 // Function Polling for authentication status
