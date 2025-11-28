@@ -423,7 +423,8 @@ function renderUserDashboardPage(userDetails) {
   localStorage.setItem('userDetailsTimestamp', Date.now());
 
   // Redirect to user
-  window.location.href = '/';
+  window.location.href = "/dashboard";
+
 }
 
 // Function Polling for authentication status
