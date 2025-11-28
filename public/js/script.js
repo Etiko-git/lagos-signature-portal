@@ -3,8 +3,8 @@ const interval = 2000;
 // CONFIG
 const CONFIG = {
   apiBaseUrl: "https://proj-ei-d-backend.vercel.app/api",
-  callBackUrl: `/App`,
-  clientApp: `Nigeria ICRP`,
+  callBackUrl: `/`,
+  clientApp: `LSDS Portal `,
   transactionType: "Login",
   polling: {
     maxAttempts: 60,
