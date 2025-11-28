@@ -422,7 +422,7 @@ function renderUserDashboardPage(userDetails) {
   // Optional: Store the timestamp for timeout check (in case you want it)
   localStorage.setItem('userDetailsTimestamp', Date.now());
 
-  // Redirect to user.html
+  // Redirect to user
   window.location.href = '/';
 }
 
