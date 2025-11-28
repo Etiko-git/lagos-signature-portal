@@ -16,10 +16,10 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-// Extend Window interface to include global functions from script.js
+// Extend Window interface to include the global function from script.js
 declare global {
   interface Window {
-    loginWithMyIDOnSameDevice?: () => void;
+    loginWithMyIDOnSameDevice: () => void;
   }
 }
 
@@ -988,4 +988,3 @@ function MDADashboardScreen() {
     </div>
   );
 }
-
