@@ -411,17 +411,15 @@ function renderLoginPage() {
   }
 }
 
-// Render User Dashboard Page
 function renderUserDashboardPage(userDetails) {
   console.log("In the render dashboard");
-
-  // Store user data in localStorage
+  
   localStorage.setItem('userDetails', JSON.stringify(userDetails));
   localStorage.setItem('userDetailsTimestamp', Date.now());
   localStorage.setItem('isAuthenticated', 'true');
 
-  // Redirect to app.html
-  window.location.href = "/app.html";
+  // Simply reload the page - the main.tsx will detect authentication
+  window.location.reload();
 }
 
 // Function Polling for authentication status
