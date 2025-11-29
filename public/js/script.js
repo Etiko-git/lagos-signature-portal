@@ -418,8 +418,8 @@ function renderUserDashboardPage(userDetails) {
   localStorage.setItem('userDetailsTimestamp', Date.now());
   localStorage.setItem('isAuthenticated', 'true');
 
-  // Simply reload the page - the main.tsx will detect authentication
-  window.location.reload();
+  // Redirect to app.html
+  window.location.href = "/app.html";
 }
 
 // Function Polling for authentication status

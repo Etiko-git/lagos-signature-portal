@@ -23,12 +23,11 @@ import './index.css'
 import { LagosSignaturePortalApp } from './App.tsx'
 import LoginPage from './login.tsx'
 
-// Check if user is authenticated
+// Check the current path and render accordingly
 function RootComponent() {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-  const userDetails = localStorage.getItem('userDetails');
+  const path = window.location.pathname;
   
-  if (isAuthenticated && userDetails) {
+  if (path === '/app' || path === '/app.html') {
     return <LagosSignaturePortalApp />;
   } else {
     return <LoginPage />;
