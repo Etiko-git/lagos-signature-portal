@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
   ShieldCheck,
   FileSignature,
@@ -18,14 +17,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-// Extend Window interface to include the global function from script.js
-declare global {
-  interface Window {
-    loginWithMyIDOnSameDevice: () => void;
-  }
-}
-
-// Simple route type for in-memory navigation (removed "login" route)
+// Simple route type for in-memory navigation
 export type Route =
   | "dashboard"
   | "create"
@@ -41,11 +33,13 @@ export type Route =
 export function LagosSignaturePortalApp() {
   const [route, setRoute] = useState<Route>("dashboard");
   const [darkMode, setDarkMode] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Navigate back to login page
-    navigate('/login');
+    // Clear authentication and redirect to login page
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userDetails');
+    localStorage.removeItem('userDetailsTimestamp');
+    window.location.href = "/index.html"; // Redirect to login page
   };
 
   const renderScreen = () => {
