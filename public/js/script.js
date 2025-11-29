@@ -421,7 +421,6 @@ function renderUserDashboardPage(userDetails) {
   // Redirect to app.html
   window.location.href = "/app.html";
 }
-
 // Function Polling for authentication status
 async function pollAuthenticationStatus(orderId) {
   let attempts = 0;
