@@ -1,7 +1,6 @@
-// main.tsx
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './index.css'
 import { LagosSignaturePortalApp } from './App.tsx'
 import LoginPage from './login.tsx'
