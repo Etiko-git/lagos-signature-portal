@@ -413,15 +413,18 @@ function renderLoginPage() {
 
 // Render User Dashboard Page
 function renderUserDashboardPage(userDetails) {
-  console.log("In the render dashboard");
+  // const userDetails = generateRandomUserDetails();
+  console.log("In the render dashboad");
 
-  // Store user data in localStorage
+  // Store user data in sessionStorage
   localStorage.setItem('userDetails', JSON.stringify(userDetails));
-  localStorage.setItem('userDetailsTimestamp', Date.now());
-  localStorage.setItem('isAuthenticated', 'true');
 
-  // Use replace to avoid history entry
-  window.location.replace("/app");
+  // Optional: Store the timestamp for timeout check (in case you want it)
+  localStorage.setItem('userDetailsTimestamp', Date.now());
+
+  // Redirect to user
+  window.location.href = "/app"; 
+
 }
 
 // Function Polling for authentication status
