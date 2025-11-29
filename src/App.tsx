@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   ShieldCheck,
   FileSignature,
@@ -14,6 +15,7 @@ import {
   FileCheck2,
   Clock,
   AlertTriangle,
+  LogOut,
 } from "lucide-react";
 
 // Extend Window interface to include the global function from script.js
@@ -36,9 +38,15 @@ export type Route =
   | "mdaDashboard";
 
 // Root App with navigation, dark mode, and page transitions
-export default function LagosSignaturePortalApp() {
+export function LagosSignaturePortalApp() {
   const [route, setRoute] = useState<Route>("dashboard");
   const [darkMode, setDarkMode] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Navigate back to login page
+    navigate('/login');
+  };
 
   const renderScreen = () => {
     switch (route) {
@@ -87,7 +95,15 @@ export default function LagosSignaturePortalApp() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Removed login button; add logout or profile if needed */}
+            {/* Logout button */}
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
+            
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
