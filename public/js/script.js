@@ -413,18 +413,37 @@ function renderLoginPage() {
 
 // Render User Dashboard Page
 function renderUserDashboardPage(userDetails) {
-  // const userDetails = generateRandomUserDetails();
-  console.log("In the render dashboad");
+  console.log("In the render dashboard");
+  console.log("User details:", userDetails);
 
-  // Store user data in sessionStorage
+  // Store user data in localStorage
   localStorage.setItem('userDetails', JSON.stringify(userDetails));
-
-  // Optional: Store the timestamp for timeout check (in case you want it)
   localStorage.setItem('userDetailsTimestamp', Date.now());
+  localStorage.setItem('isAuthenticated', 'true');
 
-  // Redirect to user
-  window.location.href = "/app"; 
-
+  // Show success message
+  showSuccessUI();
+  
+  // Redirect to app page with fallback
+  setTimeout(() => {
+    try {
+      console.log("Attempting redirect to /app");
+      window.location.href = "/app";
+      
+      // Fallback in case the redirect doesn't work
+      setTimeout(() => {
+        if (window.location.pathname !== '/app') {
+          console.log("Fallback redirect triggered");
+          window.location.href = "/app";
+        }
+      }, 1000);
+      
+    } catch (error) {
+      console.error("Redirect error:", error);
+      // Final fallback
+      window.location.replace("/app");
+    }
+  }, 1500);
 }
 
 // Function Polling for authentication status

@@ -1,3 +1,4 @@
+// main.tsx
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
@@ -10,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/app/*" element={<LagosSignaturePortalApp />} />
+        <Route path="/app" element={<LagosSignaturePortalApp />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
