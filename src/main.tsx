@@ -17,19 +17,18 @@
 //   </StrictMode>,
 // )
 
-
-
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { LagosSignaturePortalApp } from './App.tsx'
 import LoginPage from './login.tsx'
 
-// Check the current path and render accordingly
+// Check if user is authenticated
 function RootComponent() {
-  const path = window.location.pathname;
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userDetails = localStorage.getItem('userDetails');
   
-  if (path === '/app' || path === '/app.html') {
+  if (isAuthenticated && userDetails) {
     return <LagosSignaturePortalApp />;
   } else {
     return <LoginPage />;
