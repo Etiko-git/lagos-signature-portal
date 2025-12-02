@@ -2,12 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, FileSignature, Moon, Sun } from "lucide-react";
 
-// Extend Window interface to include the global function from script.js
-declare global {
-  interface Window {
-    generateQRCodeForAnotherDevice: () => void;
-  }
-}
 
 // Login via myID
 export function LoginScreen() {
