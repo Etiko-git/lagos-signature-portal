@@ -38,7 +38,7 @@ export function LoginScreen() {
 
         {/* FIXED — added onClick */}
         <button
-          onClick={() => window.generateQRCodeForAnotherDevice?.()}
+          onClick={handleSameDeviceLogin}
           className="w-full py-3 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition inline-flex items-center justify-center gap-2"
         >
           <FileSignature className="h-4 w-4" />
