@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Added React import
+import { useState } from "react"; // Fixed: Removed unused React import
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, FileSignature, Moon, Sun } from "lucide-react";
 
