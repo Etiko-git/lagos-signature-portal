@@ -1,4 +1,3 @@
-
 const interval = 2000;
 // CONFIG
 const CONFIG = {

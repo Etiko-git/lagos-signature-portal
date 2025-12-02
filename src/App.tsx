@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
@@ -15,11 +15,13 @@ import {
   Clock,
   AlertTriangle,
   LogOut,
+  User,
 } from "lucide-react";
 
 // Simple route type for in-memory navigation
 export type Route =
   | "dashboard"
+  | "login"
   | "create"
   | "providers"
   | "verify"
@@ -28,153 +30,6 @@ export type Route =
   | "contracts"
   | "contractDetails"
   | "mdaDashboard";
-
-// Root App with navigation, dark mode, and page transitions
-export function LagosSignaturePortalApp() {
-  const [route, setRoute] = useState<Route>("dashboard");
-  const [darkMode, setDarkMode] = useState(false);
-
-  const handleLogout = () => {
-    // Clear authentication and redirect to login page
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userDetails');
-    localStorage.removeItem('userDetailsTimestamp');
-    window.location.href = "/index.html"; // Redirect to login page
-  };
-
-  const renderScreen = () => {
-    switch (route) {
-      case "create":
-        return <CreateContractWorkflow />;
-      case "providers":
-        return <ProviderMarketplace />;
-      case "verify":
-        return <VerificationPortal />;
-      case "admin":
-        return <AdminConsole />;
-      case "mdaDashboard":
-        return <MDADashboardScreen />;
-      case "approval":
-        return <SignatureApprovalScreen />;
-      case "contracts":
-        return <MyContracts goToDetails={() => setRoute("contractDetails")} />;
-      case "contractDetails":
-        return (
-          <ContractDetails
-            onBack={() => setRoute("contracts")}
-            onSign={() => setRoute("approval")}
-          />
-        );
-      case "dashboard":
-      default:
-        return <DashboardScreen goToCreate={() => setRoute("create")} />;
-    }
-  };
-
-  return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 flex flex-col">
-        {/* Header */}
-        <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-lime-400 flex items-center justify-center text-white">
-              <ShieldCheck className="h-6 w-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold leading-tight">Lagos State Digital Signature Portal</h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Trusted contracts • Secure identity • Legally binding signatures
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Logout button */}
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
-            
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-              aria-label="Toggle dark mode"
-            >
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
-          </div>
-        </header>
-
-        {/* Body layout */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <aside className="hidden md:flex md:w-64 flex-col border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 gap-4">
-            <NavButton
-              icon={LayoutDashboard}
-              label="Dashboard"
-              active={route === "dashboard"}
-              onClick={() => setRoute("dashboard")}
-            />
-            <NavButton
-              icon={FileCheck2}
-              label="My Contracts"
-              active={route === "contracts"}
-              onClick={() => setRoute("contracts")}
-            />
-            <NavButton
-              icon={FileSignature}
-              label="Create Contract"
-              active={route === "create"}
-              onClick={() => setRoute("create")}
-            />
-            <NavButton
-              icon={Store}
-              label="Provider Marketplace"
-              active={route === "providers"}
-              onClick={() => setRoute("providers")}
-            />
-            <NavButton
-              icon={Search}
-              label="Verification Portal"
-              active={route === "verify"}
-              onClick={() => setRoute("verify")}
-            />
-            <NavButton
-              icon={Settings}
-              label="Admin Console"
-              active={route === "admin"}
-              onClick={() => setRoute("admin")}
-            />
-            <NavButton
-              icon={ShieldCheck}
-              label="MDA Dashboard"
-              active={route === "mdaDashboard"}
-              onClick={() => setRoute("mdaDashboard")}
-            />
-          </aside>
-
-          {/* Main content with transitions */}
-          <main className="flex-1 p-4 md:p-6 overflow-y-auto bg-slate-50/60 dark:bg-slate-950/60">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={route}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.22, ease: "easeOut" }}
-              >
-                {renderScreen()}
-              </motion.div>
-            </AnimatePresence>
-          </main>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // Reusable navigation button
 function NavButton({
@@ -203,8 +58,64 @@ function NavButton({
   );
 }
 
+function StatusBadge({ status }: { status: "Signed" | "Pending" | "Verified" }) {
+  const base = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold";
+  if (status === "Signed")
+    return (
+      <span className={`${base} bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200`}>
+        <CheckCircle2 className="h-3 w-3" /> Signed
+      </span>
+    );
+  if (status === "Verified")
+    return (
+      <span className={`${base} bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200`}>
+        <ShieldCheck className="h-3 w-3" /> Verified
+      </span>
+    );
+  return (
+    <span className={`${base} bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200`}>
+      Pending
+    </span>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  trend,
+  accent,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  trend: string;
+  accent: string;
+  icon: React.ElementType;
+}) {
+  return (
+    <motion.div
+      whileHover={{ y: -2, scale: 1.01 }}
+      className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-2"
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          {label}
+        </span>
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${accent}`}
+        >
+          <Icon className="h-3 w-3" />
+          Overview
+        </span>
+      </div>
+      <div className="text-3xl font-bold">{value}</div>
+      <div className="text-xs text-slate-500 dark:text-slate-400">{trend}</div>
+    </motion.div>
+  );
+}
+
 // Dashboard screen with high-fidelity cards and tables
-function DashboardScreen({ goToCreate }: { goToCreate: () => void }) {
+function DashboardScreen({ goToCreate, userDetails }: { goToCreate: () => void; userDetails: any }) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -214,7 +125,7 @@ function DashboardScreen({ goToCreate }: { goToCreate: () => void }) {
             Dashboard
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Overview of signatures, contracts and verification activity across Lagos State.
+            Welcome back, {userDetails?.name}! Overview of signatures, contracts and verification activity.
           </p>
         </div>
         <button
@@ -322,64 +233,8 @@ function DashboardScreen({ goToCreate }: { goToCreate: () => void }) {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  trend,
-  accent,
-  icon: Icon,
-}: {
-  label: string;
-  value: string;
-  trend: string;
-  accent: string;
-  icon: React.ElementType;
-}) {
-  return (
-    <motion.div
-      whileHover={{ y: -2, scale: 1.01 }}
-      className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-2"
-    >
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-          {label}
-        </span>
-        <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${accent}`}
-        >
-          <Icon className="h-3 w-3" />
-          Overview
-        </span>
-      </div>
-      <div className="text-3xl font-bold">{value}</div>
-      <div className="text-xs text-slate-500 dark:text-slate-400">{trend}</div>
-    </motion.div>
-  );
-}
-
-function StatusBadge({ status }: { status: "Signed" | "Pending" | "Verified" }) {
-  const base = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold";
-  if (status === "Signed")
-    return (
-      <span className={`${base} bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200`}>
-        <CheckCircle2 className="h-3 w-3" /> Signed
-      </span>
-    );
-  if (status === "Verified")
-    return (
-      <span className={`${base} bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200`}>
-        <ShieldCheck className="h-3 w-3" /> Verified
-      </span>
-    );
-  return (
-    <span className={`${base} bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200`}>
-      Pending
-    </span>
-  );
-}
-
 // Create Contract workflow
-export function CreateContractWorkflow() {
+function CreateContractWorkflow() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -439,7 +294,7 @@ export function CreateContractWorkflow() {
 }
 
 // Provider Marketplace UI
-export function ProviderMarketplace() {
+function ProviderMarketplace() {
   const providers = [
     {
       name: "Lagos Default Provider",
@@ -528,7 +383,7 @@ export function ProviderMarketplace() {
 }
 
 // Signature approval screen
-export function SignatureApprovalScreen() {
+function SignatureApprovalScreen() {
   return (
     <div className="min-h-[70vh] flex items-center justify-center">
       <motion.div
@@ -569,7 +424,7 @@ export function SignatureApprovalScreen() {
 }
 
 // Verification portal
-export function VerificationPortal() {
+function VerificationPortal() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -617,7 +472,7 @@ export function VerificationPortal() {
 }
 
 // Admin console
-export function AdminConsole() {
+function AdminConsole() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -942,4 +797,194 @@ function MDADashboardScreen() {
       </div>
     </div>
   );
-} 
+}
+
+// Root App with navigation, dark mode, and page transitions
+export function LagosSignaturePortalApp() {
+  const [route, setRoute] = useState<Route>("dashboard");
+  const [darkMode, setDarkMode] = useState(false);
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    const storedUserDetails = localStorage.getItem("userDetails");
+    
+    if (!isAuthenticated || !storedUserDetails) {
+      // Redirect to login page
+      window.location.href = "/";
+      return;
+    }
+    
+    try {
+      setUserDetails(JSON.parse(storedUserDetails));
+    } catch (error) {
+      console.error("Error parsing user details:", error);
+      window.location.href = "/";
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userDetails");
+    localStorage.removeItem("userDetailsTimestamp");
+    window.location.href = "/";
+  };
+
+  const renderScreen = () => {
+    switch (route) {
+      case "create":
+        return <CreateContractWorkflow />;
+      case "providers":
+        return <ProviderMarketplace />;
+      case "verify":
+        return <VerificationPortal />;
+      case "admin":
+        return <AdminConsole />;
+      case "mdaDashboard":
+        return <MDADashboardScreen />;
+      case "approval":
+        return <SignatureApprovalScreen />;
+      case "contracts":
+        return <MyContracts goToDetails={() => setRoute("contractDetails")} />;
+      case "contractDetails":
+        return (
+          <ContractDetails
+            onBack={() => setRoute("contracts")}
+            onSign={() => setRoute("approval")}
+          />
+        );
+      case "dashboard":
+      default:
+        return <DashboardScreen goToCreate={() => setRoute("create")} userDetails={userDetails} />;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={darkMode ? "dark" : ""}>
+      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 flex flex-col">
+        {/* Header */}
+        <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-lime-400 flex items-center justify-center text-white">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold leading-tight">Lagos State Digital Signature Portal</h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Trusted contracts • Secure identity • Legally binding signatures
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* User profile dropdown */}
+            <div className="relative group">
+              <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                <User className="h-4 w-4" />
+                <span className="text-sm font-medium">{userDetails?.name}</span>
+              </button>
+              <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="p-3 border-b border-slate-100 dark:border-slate-800">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Signed in as</p>
+                  <p className="text-sm font-semibold truncate">{userDetails?.email}</p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400">{userDetails?.myID}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </button>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+          </div>
+        </header>
+
+        {/* Body layout */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar */}
+          <aside className="hidden md:flex md:w-64 flex-col border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 gap-4">
+            <NavButton
+              icon={LayoutDashboard}
+              label="Dashboard"
+              active={route === "dashboard"}
+              onClick={() => setRoute("dashboard")}
+            />
+            <NavButton
+              icon={FileCheck2}
+              label="My Contracts"
+              active={route === "contracts"}
+              onClick={() => setRoute("contracts")}
+            />
+            <NavButton
+              icon={FileSignature}
+              label="Create Contract"
+              active={route === "create"}
+              onClick={() => setRoute("create")}
+            />
+            <NavButton
+              icon={Store}
+              label="Provider Marketplace"
+              active={route === "providers"}
+              onClick={() => setRoute("providers")}
+            />
+            <NavButton
+              icon={Search}
+              label="Verification Portal"
+              active={route === "verify"}
+              onClick={() => setRoute("verify")}
+            />
+            <NavButton
+              icon={Settings}
+              label="Admin Console"
+              active={route === "admin"}
+              onClick={() => setRoute("admin")}
+            />
+            <NavButton
+              icon={ShieldCheck}
+              label="MDA Dashboard"
+              active={route === "mdaDashboard"}
+              onClick={() => setRoute("mdaDashboard")}
+            />
+          </aside>
+
+          {/* Main content with transitions */}
+          <main className="flex-1 p-4 md:p-6 overflow-y-auto bg-slate-50/60 dark:bg-slate-950/60">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={route}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                {renderScreen()}
+              </motion.div>
+            </AnimatePresence>
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+}

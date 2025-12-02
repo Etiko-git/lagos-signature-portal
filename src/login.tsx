@@ -5,7 +5,7 @@ import { ShieldCheck, FileSignature, Moon, Sun } from "lucide-react";
 // Extend Window interface to include the global function from script.js
 declare global {
   interface Window {
-    loginWithMyIDOnSameDevice: () => void;
+    generateQRCodeForAnotherDevice: () => void;
   }
 }
 
@@ -13,8 +13,8 @@ declare global {
 export function LoginScreen() {
   // No need for local state/functions—use globals from script.js
   const handleSameDeviceLogin = () => {
-    if (window.loginWithMyIDOnSameDevice) {
-      window.loginWithMyIDOnSameDevice();  // Call global function
+    if (window.generateQRCodeForAnotherDevice) {
+      window.generateQRCodeForAnotherDevice();  // Call global function
     } else {
       console.error('loginWithMyIDOnSameDevice not found—check script.js');
     }
@@ -38,7 +38,7 @@ export function LoginScreen() {
 
         {/* FIXED — added onClick */}
         <button
-          onClick={handleSameDeviceLogin}
+          onClick={() => window.generateQRCodeForAnotherDevice?.()}
           className="w-full py-3 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition inline-flex items-center justify-center gap-2"
         >
           <FileSignature className="h-4 w-4" />
