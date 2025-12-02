@@ -9,13 +9,13 @@ export default defineConfig({
 
 
 
-/// <reference types="vite/client" />
+// /// <reference types="vite/client" />
 
-// Augment Window for the global function from script.js
-declare global {
-  interface Window {
-    loginWithMyIDOnSameDevice: () => void;
-  }
-}
+// // Augment Window for the global function from script.js
+// declare global {
+//   interface Window {
+//     loginWithMyIDOnSameDevice: () => void;
+//   }
+// }
 
-export {}; // Makes this a module for global augmentation to take effect
+// export {}; // Makes this a module for global augmentation to take effect
