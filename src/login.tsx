@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"; // Added useEffect
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, FileSignature, Moon, Sun, QrCode } from "lucide-react";
+import { ShieldCheck, FileSignature, Moon, Sun } from "lucide-react";
 
 // Extend Window interface to include the global function from script.js
 declare global {
@@ -11,7 +11,6 @@ declare global {
 
 // Login via myID
 export function LoginScreen() {
-  const [showQRCode, setShowQRCode] = useState(false);
   const [showPinPrompt, setShowPinPrompt] = useState(false);
 
   // Listen for changes from the external script
@@ -19,14 +18,12 @@ export function LoginScreen() {
     // Create a custom event listener for when PIN prompt should show
     const handleShowPinPrompt = () => {
       console.log("PIN prompt event received");
-      setShowQRCode(false);
       setShowPinPrompt(true);
     };
 
     // Create a custom event listener for success
     const handleSuccess = () => {
       console.log("Success event received");
-      setShowQRCode(false);
       setShowPinPrompt(false);
       // You can add success UI here
     };
