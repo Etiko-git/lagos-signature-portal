@@ -184,8 +184,8 @@ function showPinPromptUI() {
 
   container.innerHTML = `
         <h2 style="color: ${CONFIG.themeColor}; margin-top: 0;">Verify on Your Device</h2>
-        <div style="text-align:center; margin: 20px 0;">
-            <div id="animation-container" style="margin: 20px auto; height: 200px;"></div>
+        <div style="text-align:center; margin: 20px 0; display: flex; flex-direction: column; align-items: center;">
+            <div id="animation-container" style="margin: 20px auto; height: 200px; display: flex; justify-content: center; align-items: center; width: 100%;"></div>
             <p style="margin-top: 20px; color: #555;">
                 Please enter your security PIN in the MyID app to complete verification
             </p>
@@ -319,10 +319,12 @@ function startPhoneAnimation() {
 
 function showSuccessUI() {
   showUIMessage("Verification Successful!", `
-      <div style="text-align:center; margin: 20px 0;">
-        <svg viewBox="0 0 24 24" width="64" height="64" style="margin-bottom: 20px;">
-          <path fill="#34A853" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-        </svg>
+      <div style="text-align:center; margin: 20px 0; display: flex; flex-direction: column; align-items: center;">
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+          <svg viewBox="0 0 24 24" width="64" height="64">
+            <path fill="#34A853" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+          </svg>
+        </div>
         <p style="color: #555;">You will be redirected shortly...</p>
         <div class="progress-bar" style="
           height: 4px;
@@ -330,6 +332,8 @@ function showSuccessUI() {
           margin-top: 20px;
           border-radius: 2px;
           overflow: hidden;
+          width: 100%;
+          max-width: 200px;
         ">
           <div style="
             height: 100%;
