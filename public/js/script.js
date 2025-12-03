@@ -418,7 +418,7 @@ function renderUserDashboardPage(userDetails) {
   localStorage.setItem('isAuthenticated', 'true');
 
   // Redirect to app.html
-  window.location.href = "/app";
+  window.location.href = "/app.html";
 }
 // Function Polling for authentication status
 async function pollAuthenticationStatus(orderId) {
