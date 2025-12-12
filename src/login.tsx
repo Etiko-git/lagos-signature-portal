@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, FileSignature, Moon, Sun } from "lucide-react";
 
+
 // Extend Window interface to include the global function from script.js
 declare global {
   interface Window {
@@ -192,9 +193,31 @@ export default function LoginPage() {
         {/* Header */}
         <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-lime-400 flex items-center justify-center text-white">
-              <ShieldCheck className="h-6 w-6" />
+            <div
+              style={{
+                height: "70px",
+                width: "70px",
+                borderRadius: "50%",
+                backgroundColor: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+                // border: "2px solid #ffffffff", // light border (optional)
+              }}
+            >
+              <img
+                src="/img/lagos2.jpg"
+                alt="Lagos Logo"
+                style={{
+                  width: "70px",
+                  height: "70px",
+                  objectFit: "cover",
+                }}
+              />
             </div>
+
+
             <div>
               <h1 className="text-xl font-bold leading-tight">Lagos State Digital Signature Portal</h1>
               <p className="text-xs text-slate-500 dark:text-slate-400">
