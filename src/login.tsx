@@ -195,8 +195,8 @@ export default function LoginPage() {
           <div className="flex items-center gap-3">
             <div
               style={{
-                height: "70px",
-                width: "70px",
+                height: "80px",
+                width: "80px",
                 borderRadius: "50%",
                 backgroundColor: "white",
                 display: "flex",
