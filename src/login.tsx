@@ -209,8 +209,8 @@ export default function LoginPage() {
                 src="/img/lagos2.jpg"
                 alt="Lagos Logo"
                 style={{
-                  width: "70px",
-                  height: "70px",
+                  // width: "80px",
+                  // height: "80px",
                   objectFit: "cover",
                 }}
               />
