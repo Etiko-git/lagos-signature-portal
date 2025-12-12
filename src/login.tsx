@@ -203,7 +203,6 @@ export default function LoginPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
-                // border: "2px solid #ffffffff", // light border (optional)
               }}
             >
               <img
